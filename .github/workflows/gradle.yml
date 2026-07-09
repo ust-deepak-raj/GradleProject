@@ -3,7 +3,7 @@ name: Test Containers Builder Tests
 on:
   push:
     branches:
-      - deepak-week6-day3
+      - master
 
 jobs:
   test:

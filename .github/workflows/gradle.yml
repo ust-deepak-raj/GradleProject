@@ -32,7 +32,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '21'
+          java-version: "21"
           cache: gradle
 
       - name: Set up Gradle
@@ -44,3 +44,10 @@ jobs:
             -Ddb.url=jdbc:mysql://127.0.0.1:3306/orders_test \
             -Ddb.user=root \
             -Ddb.password=root
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: build/reports/tests/test

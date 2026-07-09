@@ -1,0 +1,45 @@
+name: Test Containers Builder Tests
+
+on:
+  push:
+    branches:
+      - deepak-week6-day3
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: orders_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 22
+          cache: gradle
+
+      - name: Make Gradle executable
+        run: chmod +x gradlew
+
+      - name: Run Tests
+        run: ./gradlew test
+        env:
+          ORG_GRADLE_PROJECT_dbUrl: jdbc:mysql://localhost:3306/orders_test
+          ORG_GRADLE_PROJECT_dbUser: root
+          ORG_GRADLE_PROJECT_dbPassword: root
